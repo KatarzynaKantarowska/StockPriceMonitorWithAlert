@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class BinanceService {
@@ -26,6 +28,7 @@ public class BinanceService {
         CryptoInfoSnapshotEty ety = CryptoInfoSnapshotEty.builder()
                 .cryptoName(dto.getSymbol())
                 .price(dto.getPrice())
+                .timestamp(LocalDateTime.now())
                 .build();
         return binanceRepository.save(ety);
     }

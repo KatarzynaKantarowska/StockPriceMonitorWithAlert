@@ -4,8 +4,6 @@ import com.kodilla.stockpricemonitorwithalert.dto.BinanceCryptoPriceDto;
 import com.kodilla.stockpricemonitorwithalert.service.BinanceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 import java.math.BigDecimal;
 
 import static org.mockito.Mockito.*;
