@@ -1,6 +1,6 @@
 package com.kodilla.stockpricemonitorwithalert.controller;
 
-import com.kodilla.stockpricemonitorwithalert.dto.binance.BinanceCryptoPriceDto;
+import com.kodilla.stockpricemonitorwithalert.dto.BinanceCryptoPriceDto;
 import com.kodilla.stockpricemonitorwithalert.service.BinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,7 +1,6 @@
 package com.kodilla.stockpricemonitorwithalert.scheduler;
 
 import com.kodilla.stockpricemonitorwithalert.service.BinanceService;
-import com.kodilla.stockpricemonitorwithalert.service.EmailService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -12,10 +11,7 @@ import java.math.BigDecimal;
 @Component
 @RequiredArgsConstructor
 public class CryptoScheduler {
-    private final EmailService emailService;
     private final BinanceService binanceService;
-    private static final String SUBJECT = "Crypto Price Alert";
-    //private double previousPrice = 0.0;
     private BigDecimal previousPrice = BigDecimal.ZERO;
     private final BigDecimal bdMultiplier = new BigDecimal("1.1");
 
@@ -38,7 +34,5 @@ public class CryptoScheduler {
 
     private void sendPriceAlertEmail(BigDecimal currentPrice) throws MessagingException {
         String msg = "The price of the cryptocurrency has increased by 10%! The current price is: " + currentPrice;
-        emailService.sendEmail(SUBJECT, msg, null);
-        emailService.sendPriceAlert(SUBJECT, previousPrice, currentPrice);
     }
 }

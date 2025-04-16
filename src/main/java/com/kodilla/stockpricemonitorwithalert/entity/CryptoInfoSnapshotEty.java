@@ -23,5 +23,4 @@ public class CryptoInfoSnapshotEty {
     private String cryptoName;
     private BigDecimal price;
     private LocalDateTime timestamp;
-
 }

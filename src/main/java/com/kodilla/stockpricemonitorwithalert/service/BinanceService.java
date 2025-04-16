@@ -1,12 +1,9 @@
 package com.kodilla.stockpricemonitorwithalert.service;
 
-import com.kodilla.stockpricemonitorwithalert.dto.binance.BinanceCryptoPriceDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.kodilla.stockpricemonitorwithalert.dto.BinanceCryptoPriceDto;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.math.BigDecimal;
 
 @Service
 public class BinanceService {
@@ -21,6 +18,6 @@ public class BinanceService {
         String url = UriComponentsBuilder.fromHttpUrl("https://api.binance.com/api/v3/ticker/price")
                 .queryParam("symbol", symbol)
                 .toUriString();
-    return restTemplate.getForObject(url, BinanceCryptoPriceDto.class);
+        return restTemplate.getForObject(url, BinanceCryptoPriceDto.class);
     }
 }
