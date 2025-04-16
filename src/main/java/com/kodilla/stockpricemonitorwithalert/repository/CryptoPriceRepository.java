@@ -11,6 +11,4 @@ public interface CryptoPriceRepository extends JpaRepository<CryptoInfoSnapshotE
     @Query(value = "SELECT c FROM CryptoInfoSnapshotEty c ORDER BY c.id DESC LIMIT 1")
     CryptoInfoSnapshotEty findTopByOrderByIdDesc();
     List<CryptoInfoSnapshotEty> findAllByCryptoName(String symbol);
-
-
 }

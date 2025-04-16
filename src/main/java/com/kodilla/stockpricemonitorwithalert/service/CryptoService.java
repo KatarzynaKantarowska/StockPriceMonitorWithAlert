@@ -1,5 +1,6 @@
 package com.kodilla.stockpricemonitorwithalert.service;
-import com.kodilla.stockpricemonitorwithalert.dto.binance.BinanceCryptoPriceDto;
+
+import com.kodilla.stockpricemonitorwithalert.dto.BinanceCryptoPriceDto;
 import com.kodilla.stockpricemonitorwithalert.entity.CryptoInfoSnapshotEty;
 import com.kodilla.stockpricemonitorwithalert.repository.CryptoPriceRepository;
 import org.springframework.stereotype.Component;
@@ -9,8 +10,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
-
-//import static jdk.internal.org.jline.reader.impl.LineReaderImpl.CompletionType.List;
 
 @Component
 @Service
@@ -33,6 +32,22 @@ public class CryptoService {
         return cryptoPriceRepository.save(cryptoInfoSnapshotEty);
     }
 
+    public CryptoInfoSnapshotEty updateSnapshotPrice(Long id, BigDecimal newPrice) {
+        CryptoInfoSnapshotEty snapshot = cryptoPriceRepository.findById(id).orElseThrow();
+        snapshot.setPrice(newPrice);
+        return cryptoPriceRepository.save(snapshot);
+    }
+
+    public void deleteSnapshot(Long id) {
+        cryptoPriceRepository.deleteById(id);
+    }
+
+    public void deleteAllByCryptoName(String symbol) {
+        List<CryptoInfoSnapshotEty> snapshots = cryptoPriceRepository.findAllByCryptoName(symbol);
+        cryptoPriceRepository.deleteAll(snapshots);
+    }
+
+
     public BigDecimal calculatePercentageChangeFromLastPriceInDb(String symbol) {
         BinanceCryptoPriceDto actual = binanceService.getPrice(symbol);
         CryptoInfoSnapshotEty last = cryptoPriceRepository.findTopByOrderByIdDesc();
@@ -45,7 +60,7 @@ public class CryptoService {
 
             return percentageChange;
         }
-        return calculatePercentageChangeFromLastPriceInDb(symbol); // ?
+        return calculatePercentageChangeFromLastPriceInDb(symbol);
     }
 
     public List<CryptoInfoSnapshotEty> showCurrencyChangesHistory(String symbol) {
@@ -56,7 +71,15 @@ public class CryptoService {
         return cryptoPriceRepository.findCryptoById(cryptoId);
     }
 
-//    public CryptoEty changeCryptoCurrency(Long cryptoId) {
-//        return cryptoPriceRepository.
-//    }
+    public BigDecimal getLastPrice(String symbol) {
+        return cryptoPriceRepository.findTopByOrderByIdDesc().getPrice();
+    }
+
+    public Long countAllSnapshots() {
+        return cryptoPriceRepository.count();
+    }
+
+    public boolean existsById(Long id) {
+        return cryptoPriceRepository.existsById(id);
+    }
 }
