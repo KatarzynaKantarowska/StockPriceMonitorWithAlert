@@ -1,38 +1,45 @@
 package com.kodilla.stockpricemonitorwithalert.scheduler;
 
+import com.kodilla.stockpricemonitorwithalert.dto.BinanceCryptoPriceDto;
 import com.kodilla.stockpricemonitorwithalert.service.BinanceService;
-import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-
 @Component
 @RequiredArgsConstructor
+@Slf4j(topic = "CryptoScheduler")
 public class CryptoScheduler {
     private final BinanceService binanceService;
-    private BigDecimal previousPrice = BigDecimal.ZERO;
-    private final BigDecimal bdMultiplier = new BigDecimal("1.1");
 
+    @Scheduled(cron = "0 */5 * * * ?")
+    void persistHistoricCryptoData() {
+        log.info("Starting scheduled task: persistHistoricCryptoData");
 
-    @Scheduled(initialDelay = 10000, fixedRate = 3600000)
-    public void checkCryptoPriceAndSendMsg() throws MessagingException {
-        BigDecimal currentPrice = binanceService.getPrice("USDTBTC").getPrice();
+        try {
+            BinanceCryptoPriceDto btcusdt = binanceService.getPrice("BTCUSDT");
+            log.info("Fetched BTCUSDT price: {}", btcusdt);
 
-        if (priceIncreased(previousPrice, currentPrice)) {
-            sendPriceAlertEmail(currentPrice);
+            BinanceCryptoPriceDto ethusdt = binanceService.getPrice("ETHUSDT");
+            log.info("Fetched ETHUSDT price: {}", ethusdt);
+
+            BinanceCryptoPriceDto xrpusdt = binanceService.getPrice("XRPUSDT");
+            log.info("Fetched XRPUSDT price: {}", xrpusdt);
+
+            binanceService.save(btcusdt);
+            log.info("Saved BTCUSDT price to database");
+
+            binanceService.save(ethusdt);
+            log.info("Saved ETHUSDT price to database");
+
+            binanceService.save(xrpusdt);
+            log.info("Saved XRPUSDT price to database");
+
+        } catch (Exception e) {
+            log.error("Error occurred during scheduled task execution: {}", e.getMessage(), e);
         }
-        previousPrice = currentPrice;
-    }
 
-    private boolean priceIncreased(BigDecimal previousPrice, BigDecimal currentPrice) {
-        BigDecimal prevPriceAfterMultiplicationByMultiplier = previousPrice.multiply(bdMultiplier);
-        return currentPrice.compareTo(prevPriceAfterMultiplicationByMultiplier) >= 0;
-
-    }
-
-    private void sendPriceAlertEmail(BigDecimal currentPrice) throws MessagingException {
-        String msg = "The price of the cryptocurrency has increased by 10%! The current price is: " + currentPrice;
+        log.info("Scheduled task: persistHistoricCryptoData completed");
     }
 }
